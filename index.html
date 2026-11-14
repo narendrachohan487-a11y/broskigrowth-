@@ -1,0 +1,917 @@
+```html
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Broski Growth - E-Commerce & Retail Scale Agency</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        bgDark: '#0B0B0E',
+                        cardDark: '#141419',
+                        borderDark: '#24242D',
+                        purpleAccent: '#9333EA',
+                        purpleGlow: '#A855F7',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0B0B0E;
+            color: #F3F4F6;
+        }
+        .glow-purple {
+            box-shadow: 0 0 25px -5px rgba(147, 51, 234, 0.35);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #FFFFFF 0%, #A855F7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .purple-gradient-btn {
+            background: linear-gradient(135deg, #9333EA 0%, #6B21A8 100%);
+            transition: all 0.3s ease;
+        }
+        .purple-gradient-btn:hover {
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+            transform: translateY(-2px);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0B0B0E;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #24242D;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9333EA;
+        }
+    </style>
+</head>
+<body class="bg-bgDark min-h-screen flex flex-col justify-between selection:bg-purpleAccent selection:text-white">
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-3"></div>
+
+    <!-- MAIN HEADER / NAVBAR -->
+    <header class="sticky top-0 z-40 bg-bgDark/90 backdrop-blur-md border-b border-borderDark px-4 lg:px-8 py-3 transition-all duration-200">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <!-- Brand Logo (Recreated with high-contrast black/purple aesthetic) -->
+            <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('public')">
+                <div class="relative flex items-center justify-center w-10 h-10 bg-black border border-purpleAccent/40 rounded-xl glow-purple overflow-hidden">
+                    <span class="font-black text-xl text-white tracking-tighter">B<span class="text-purpleGlow">G</span></span>
+                    <!-- Upward Growth Arrow Overlay -->
+                    <svg class="absolute w-6 h-6 text-purpleGlow transform translate-x-1 -translate-y-1 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                    </svg>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-black text-xl tracking-tight text-white flex items-center gap-1">
+                        Broski <span class="text-purpleGlow font-extrabold">Growth</span>
+                    </span>
+                    <span class="text-[10px] text-gray-400 tracking-wider uppercase font-semibold">Local Store to E-Com Giant</span>
+                </div>
+            </div>
+
+            <!-- Desktop Navigation Links -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300">
+                <button onclick="scrollToSection('services')" class="hover:text-purpleGlow transition-colors">Services</button>
+                <button onclick="scrollToSection('portfolio')" class="hover:text-purpleGlow transition-colors">Portfolio & Results</button>
+                <button onclick="scrollToSection('apply')" class="hover:text-purpleGlow transition-colors">Apply Now</button>
+                <button onclick="switchTab('crm')" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-purpleAccent/40 bg-purpleAccent/10 text-purpleGlow hover:bg-purpleAccent hover:text-white transition-all text-xs font-semibold">
+                    <i class="fa-solid fa-users-gear"></i> Team CRM Portal
+                </button>
+            </nav>
+
+            <!-- Actions & Mobile Menu Toggle -->
+            <div class="flex items-center gap-3">
+                <button onclick="scrollToSection('apply')" class="hidden sm:inline-flex purple-gradient-btn text-white text-xs md:text-sm font-semibold px-4 py-2.5 rounded-xl items-center gap-2">
+                    <span>Grow Your Shop</span>
+                    <i class="fa-solid fa-arrow-right text-xs"></i>
+                </button>
+                <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="md:hidden text-gray-300 hover:text-white p-2">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Drawer Menu -->
+        <div id="mobile-menu" class="hidden md:hidden border-t border-borderDark mt-3 pt-4 pb-2 px-2 flex flex-col gap-3">
+            <button onclick="scrollToSection('services'); toggleMobileMenu()" class="text-left px-3 py-2 text-gray-300 hover:bg-cardDark rounded-lg text-sm">Services</button>
+            <button onclick="scrollToSection('portfolio'); toggleMobileMenu()" class="text-left px-3 py-2 text-gray-300 hover:bg-cardDark rounded-lg text-sm">Portfolio & Case Studies</button>
+            <button onclick="scrollToSection('apply'); toggleMobileMenu()" class="text-left px-3 py-2 text-gray-300 hover:bg-cardDark rounded-lg text-sm">Apply for Onboarding</button>
+            <button onclick="switchTab('crm'); toggleMobileMenu()" class="flex items-center justify-between px-3 py-2 bg-purpleAccent/20 text-purpleGlow rounded-lg text-sm font-semibold">
+                <span>Team CRM & Field Visits</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN APP CONTAINER -->
+    <main class="flex-grow">
+        
+        <!-- SECTION 1: PUBLIC AGENCY WEBSITE -->
+        <div id="public-view" class="space-y-24 pb-20">
+            
+            <!-- Hero Section -->
+            <section class="relative pt-12 lg:pt-20 px-4 max-w-7xl mx-auto text-center">
+                <div class="absolute inset-0 top-0 -z-10 flex items-center justify-center">
+                    <div class="w-96 h-96 bg-purpleAccent/15 rounded-full blur-[120px]"></div>
+                </div>
+
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-purpleAccent/30 bg-purpleAccent/10 text-purpleGlow text-xs font-semibold mb-6">
+                    <span class="w-2 h-2 rounded-full bg-purpleGlow animate-ping"></span>
+                    Transforming Local Retail Stores into Pan-India E-Com Brands
+                </div>
+
+                <h1 class="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-white tracking-tight leading-tight max-w-5xl mx-auto">
+                    Aapki Dukaan Ko Banayein <br class="hidden sm:inline" />
+                    <span class="text-gradient">Meesho, Amazon & Insta Super-Brand</span>
+                </h1>
+
+                <p class="mt-6 text-gray-400 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
+                    Broski Growth helps local clothing shop owners shoot HD catalogs, list products on top marketplaces, run high-converting Meta Ads, and manage end-to-end sales growth.
+                </p>
+
+                <div class="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
+                    <button onclick="scrollToSection('apply')" class="w-full sm:w-auto purple-gradient-btn text-white font-semibold px-8 py-3.5 rounded-xl text-base flex items-center justify-center gap-3">
+                        <span>Get Started - Apply Now</span>
+                        <i class="fa-solid fa-bolt"></i>
+                    </button>
+                    <button onclick="switchTab('crm')" class="w-full sm:w-auto border border-borderDark hover:border-purpleAccent/50 bg-cardDark text-gray-300 hover:text-white font-semibold px-6 py-3.5 rounded-xl text-base flex items-center justify-center gap-2 transition-all">
+                        <i class="fa-solid fa-briefcase text-purpleGlow"></i>
+                        <span>Team Field Entry Portal</span>
+                    </button>
+                </div>
+
+                <!-- Stats Bar -->
+                <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 p-6 bg-cardDark border border-borderDark rounded-2xl max-w-4xl mx-auto text-left sm:text-center">
+                    <div class="border-r border-borderDark/60 last:border-0 pr-4">
+                        <p class="text-3xl font-black text-white">50k+</p>
+                        <p class="text-xs text-gray-400 mt-1">Monthly Orders Generated</p>
+                    </div>
+                    <div class="border-r border-borderDark/60 last:border-0 pr-4">
+                        <p class="text-3xl font-black text-purpleGlow">4.2x</p>
+                        <p class="text-xs text-gray-400 mt-1">Average Meta Ad ROAS</p>
+                    </div>
+                    <div class="border-r border-borderDark/60 last:border-0 pr-4">
+                        <p class="text-3xl font-black text-white">100%</p>
+                        <p class="text-xs text-gray-400 mt-1">Done-For-You Setup</p>
+                    </div>
+                    <div>
+                        <p class="text-3xl font-black text-purpleGlow">₹15L+</p>
+                        <p class="text-xs text-gray-400 mt-1">Client Revenue Scaled</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Services Section -->
+            <section id="services" class="max-w-7xl mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-xs font-bold uppercase tracking-widest text-purpleGlow mb-2">Our Growth Services</h2>
+                    <p class="text-3xl sm:text-4xl font-black text-white">Everything Your Store Needs To Sell Online</p>
+                    <p class="text-gray-400 text-sm max-w-xl mx-auto mt-2">Hum har step pe aapke sath hain - Photoshoot se leke courier delivery aur ads tak.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Service 1 -->
+                    <div class="bg-cardDark border border-borderDark hover:border-purpleAccent/50 p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1">
+                        <div class="w-12 h-12 bg-purpleAccent/10 border border-purpleAccent/30 rounded-xl flex items-center justify-center text-purpleGlow text-xl mb-4">
+                            <i class="fa-solid fa-store"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Marketplace Listing</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed mb-4">
+                            Meesho, Amazon, Flipkart, & Myntra seller account setup, catalog upload, and SEO optimization.
+                        </p>
+                        <span class="text-xs text-purpleGlow font-medium flex items-center gap-1">Meesho & Amazon Ready <i class="fa-solid fa-check text-[10px]"></i></span>
+                    </div>
+
+                    <!-- Service 2 -->
+                    <div class="bg-cardDark border border-borderDark hover:border-purpleAccent/50 p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1">
+                        <div class="w-12 h-12 bg-purpleAccent/10 border border-purpleAccent/30 rounded-xl flex items-center justify-center text-purpleGlow text-xl mb-4">
+                            <i class="fa-solid fa-camera font-bold"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">HD Photoshoot & Reels</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed mb-4">
+                            High-quality product photography, ghost mannequin shots, and high-viral Instagram Reels editing.
+                        </p>
+                        <span class="text-xs text-purpleGlow font-medium flex items-center gap-1">Pro Mobile & Studio Setup <i class="fa-solid fa-check text-[10px]"></i></span>
+                    </div>
+
+                    <!-- Service 3 -->
+                    <div class="bg-cardDark border border-borderDark hover:border-purpleAccent/50 p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1">
+                        <div class="w-12 h-12 bg-purpleAccent/10 border border-purpleAccent/30 rounded-xl flex items-center justify-center text-purpleGlow text-xl mb-4">
+                            <i class="fa-solid fa-rectangle-ad"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Meta Ads Management</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed mb-4">
+                            Targeted Instagram & Facebook ads to drive direct customer orders locally and pan-India with low CAC.
+                        </p>
+                        <span class="text-xs text-purpleGlow font-medium flex items-center gap-1">High ROI Campaigns <i class="fa-solid fa-check text-[10px]"></i></span>
+                    </div>
+
+                    <!-- Service 4 -->
+                    <div class="bg-cardDark border border-borderDark hover:border-purpleAccent/50 p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1">
+                        <div class="w-12 h-12 bg-purpleAccent/10 border border-purpleAccent/30 rounded-xl flex items-center justify-center text-purpleGlow text-xl mb-4">
+                            <i class="fa-brands fa-instagram"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Social Branding</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed mb-4">
+                            Complete page creation, highlight design, customer response automation, and organic growth plan.
+                        </p>
+                        <span class="text-xs text-purpleGlow font-medium flex items-center gap-1">Complete Page Building <i class="fa-solid fa-check text-[10px]"></i></span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Interactive Case Studies / Portfolio Pitch Section -->
+            <section id="portfolio" class="max-w-7xl mx-auto px-4 py-8">
+                <div class="bg-cardDark border border-borderDark rounded-3xl p-6 sm:p-10 relative overflow-hidden">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4 border-b border-borderDark pb-6">
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-widest text-purpleGlow">Client Pitch Portfolio</span>
+                            <h2 class="text-2xl sm:text-3xl font-black text-white mt-1">Proven Results for Clothing Stores</h2>
+                            <p class="text-gray-400 text-xs sm:text-sm mt-1">Demonstrate how Broski Growth scales offline retail stores.</p>
+                        </div>
+                        <div class="flex flex-wrap gap-2" id="portfolio-filters">
+                            <button onclick="filterPortfolio('all')" class="portfolio-btn active bg-purpleAccent text-white px-3 py-1.5 rounded-lg text-xs font-medium">All Success Stories</button>
+                            <button onclick="filterPortfolio('meesho')" class="portfolio-btn bg-black text-gray-400 hover:text-white border border-borderDark px-3 py-1.5 rounded-lg text-xs font-medium">Meesho Scaling</button>
+                            <button onclick="filterPortfolio('ads')" class="portfolio-btn bg-black text-gray-400 hover:text-white border border-borderDark px-3 py-1.5 rounded-lg text-xs font-medium">Meta Ads ROI</button>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-3 gap-6" id="portfolio-grid">
+                        <!-- Case Study 1 -->
+                        <div class="portfolio-card meesho bg-black/60 border border-borderDark rounded-2xl p-5 hover:border-purpleGlow transition-all">
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="bg-purpleAccent/20 text-purpleGlow text-[10px] font-bold uppercase px-2.5 py-1 rounded-md">Ethnic Wear Shop</span>
+                                <span class="text-xs text-gray-400"><i class="fa-solid fa-location-dot text-purpleGlow"></i> Jaipur</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-white">Royale Kurti Store</h3>
+                            <p class="text-xs text-gray-400 mt-1 mb-4">Converted offline wholesale kurti shop to Meesho seller.</p>
+                            
+                            <div class="bg-cardDark p-3 rounded-xl space-y-2 mb-4 text-xs">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-400">Monthly Orders:</span>
+                                    <span class="text-white font-bold">120 → 1,450 / mo</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-400">Total Revenue:</span>
+                                    <span class="text-purpleGlow font-bold">₹6.4 Lakhs / mo</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-400">Key Deliverable:</span>
+                                    <span class="text-gray-200">Catalog Shoot & Listing</span>
+                                </div>
+                            </div>
+                            <p class="text-[11px] text-gray-400 italic">"Pehle bas Jaipur local log aate the, ab poore India me kapde dispatch ho rahe hain!"</p>
+                        </div>
+
+                        <!-- Case Study 2 -->
+                        <div class="portfolio-card ads bg-black/60 border border-borderDark rounded-2xl p-5 hover:border-purpleGlow transition-all">
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="bg-purpleAccent/20 text-purpleGlow text-[10px] font-bold uppercase px-2.5 py-1 rounded-md">Streetwear / Men's</span>
+                                <span class="text-xs text-gray-400"><i class="fa-solid fa-location-dot text-purpleGlow"></i> Delhi</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-white">Urban Hype Clothing</h3>
+                            <p class="text-xs text-gray-400 mt-1 mb-4">Instagram page & Meta Ads direct-to-WhatsApp sales system.</p>
+                            
+                            <div class="bg-cardDark p-3 rounded-xl space-y-2 mb-4 text-xs">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-400">Ad Spend:</span>
+                                    <span class="text-white font-bold">₹15,000 / mo</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-400">Return (ROAS):</span>
+                                    <span class="text-purpleGlow font-bold">4.8x Sales ROAS</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-400">Instagram Growth:</span>
+                                    <span class="text-gray-200">1.2k → 14.5k Followers</span>
+                                </div>
+                            </div>
+                            <p class="text-[11px] text-gray-400 italic">"Reels photoshoot and daily Meta ads generated over 40+ daily direct WhatsApp orders."</p>
+                        </div>
+
+                        <!-- Case Study 3 -->
+                        <div class="portfolio-card meesho bg-black/60 border border-borderDark rounded-2xl p-5 hover:border-purpleGlow transition-all">
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="bg-purpleAccent/20 text-purpleGlow text-[10px] font-bold uppercase px-2.5 py-1 rounded-md">Saree & Fabrics</span>
+                                <span class="text-xs text-gray-400"><i class="fa-solid fa-location-dot text-purpleGlow"></i> Surat</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-white">Vardhman Silks</h3>
+                            <p class="text-xs text-gray-400 mt-1 mb-4">Multi-marketplace onboarding (Meesho + Amazon + Instagram).</p>
+                            
+                            <div class="bg-cardDark p-3 rounded-xl space-y-2 mb-4 text-xs">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-400">Listing Count:</span>
+                                    <span class="text-white font-bold">85 SKUs Uploaded</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-400">Sales Increase:</span>
+                                    <span class="text-purpleGlow font-bold">3.2x Overall Growth</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-400">Team Support:</span>
+                                    <span class="text-gray-200">Daily Inventory Sync</span>
+                                </div>
+                            </div>
+                            <p class="text-[11px] text-gray-400 italic">"Broski team handled stock inventory and GST compliance completely hassle-free."</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Client Application Form -->
+            <section id="apply" class="max-w-4xl mx-auto px-4">
+                <div class="bg-cardDark border border-purpleAccent/40 rounded-3xl p-6 sm:p-10 glow-purple relative">
+                    <div class="text-center mb-8">
+                        <span class="px-3 py-1 bg-purpleAccent/20 text-purpleGlow rounded-full text-xs font-bold uppercase tracking-wide">Grow Your Store</span>
+                        <h2 class="text-3xl font-black text-white mt-2">Apply For Broski Growth Onboarding</h2>
+                        <p class="text-gray-400 text-sm mt-1">Apne kapdo ki dukaan ko online le jaane ke liye details bharein. Hum 24 ghante me contact karenge.</p>
+                    </div>
+
+                    <form id="public-apply-form" onsubmit="handlePublicApply(event)" class="space-y-4">
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-300 mb-1">Aapka Naam / Owner Name *</label>
+                                <input type="text" id="app-owner" required placeholder="e.g. Rahul Sharma" class="w-full bg-black border border-borderDark rounded-xl px-4 py-3 text-sm text-white focus:border-purpleGlow focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-300 mb-1">Dukaan Ka Naam / Store Name *</label>
+                                <input type="text" id="app-store" required placeholder="e.g. Royal Clothing Jaipur" class="w-full bg-black border border-borderDark rounded-xl px-4 py-3 text-sm text-white focus:border-purpleGlow focus:outline-none">
+                            </div>
+                        </div>
+
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-300 mb-1">Phone / WhatsApp Number *</label>
+                                <input type="tel" id="app-phone" required placeholder="e.g. 9876543210" class="w-full bg-black border border-borderDark rounded-xl px-4 py-3 text-sm text-white focus:border-purpleGlow focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-300 mb-1">City / Location *</label>
+                                <input type="text" id="app-city" required placeholder="e.g. Delhi, Jaipur, Surat..." class="w-full bg-black border border-borderDark rounded-xl px-4 py-3 text-sm text-white focus:border-purpleGlow focus:outline-none">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-medium text-gray-300 mb-1">Service Required (Kis me help chahiye?)</label>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
+                                <label class="flex items-center gap-2 bg-black border border-borderDark p-2.5 rounded-xl cursor-pointer hover:border-purpleGlow text-xs">
+                                    <input type="checkbox" name="services" value="Meesho/Amazon" class="accent-purpleAccent">
+                                    <span>Meesho/Amazon</span>
+                                </label>
+                                <label class="flex items-center gap-2 bg-black border border-borderDark p-2.5 rounded-xl cursor-pointer hover:border-purpleGlow text-xs">
+                                    <input type="checkbox" name="services" value="Photoshoot" class="accent-purpleAccent">
+                                    <span>Photoshoot/Reels</span>
+                                </label>
+                                <label class="flex items-center gap-2 bg-black border border-borderDark p-2.5 rounded-xl cursor-pointer hover:border-purpleGlow text-xs">
+                                    <input type="checkbox" name="services" value="Meta Ads" class="accent-purpleAccent">
+                                    <span>Meta Ads</span>
+                                </label>
+                                <label class="flex items-center gap-2 bg-black border border-borderDark p-2.5 rounded-xl cursor-pointer hover:border-purpleGlow text-xs">
+                                    <input type="checkbox" name="services" value="Instagram Setup" class="accent-purpleAccent">
+                                    <span>Insta Page</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-medium text-gray-300 mb-1">Extra Notes (Optional)</label>
+                            <textarea id="app-notes" rows="2" placeholder="Tell us about your main products (Shirts, Sarees, Kurtis etc.)..." class="w-full bg-black border border-borderDark rounded-xl px-4 py-2.5 text-sm text-white focus:border-purpleGlow focus:outline-none"></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full purple-gradient-btn text-white font-bold py-3.5 rounded-xl text-base flex items-center justify-center gap-2">
+                            <span>Submit Application</span>
+                            <i class="fa-solid fa-paper-plane text-sm"></i>
+                        </button>
+                    </form>
+                </div>
+            </section>
+        </div>
+
+        <!-- SECTION 2: INTERNAL TEAM CRM & FIELD VISIT DASHBOARD -->
+        <div id="crm-view" class="hidden max-w-7xl mx-auto px-4 py-8 space-y-8">
+            
+            <!-- Dashboard Banner Header -->
+            <div class="bg-cardDark border border-borderDark rounded-2xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-purpleGlow"></span>
+                        <span class="text-xs text-purpleGlow font-bold uppercase tracking-wider">Internal Team CRM</span>
+                    </div>
+                    <h1 class="text-2xl font-black text-white mt-1">Client Management & Field Visits</h1>
+                    <p class="text-xs text-gray-400 mt-1">Log offline store visits, track online client applications, and share lead updates with all Broski Growth team members.</p>
+                </div>
+                <div class="flex gap-3 w-full md:w-auto">
+                    <button onclick="openOfflineVisitModal()" class="purple-gradient-btn text-white text-xs font-semibold px-4 py-2.5 rounded-xl flex items-center gap-2">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Add New Offline Visit</span>
+                    </button>
+                    <button onclick="switchTab('public')" class="border border-borderDark bg-black text-gray-300 hover:text-white text-xs font-semibold px-4 py-2.5 rounded-xl flex items-center gap-2">
+                        <i class="fa-solid fa-globe"></i>
+                        <span>View Website</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- CRM Metrics Overview Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-cardDark border border-borderDark p-5 rounded-2xl">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs text-gray-400 font-medium">Total Leads / Stores</span>
+                        <i class="fa-solid fa-users text-purpleGlow"></i>
+                    </div>
+                    <p id="metric-total" class="text-3xl font-black text-white mt-2">0</p>
+                    <span class="text-[10px] text-gray-500">Combined online + field leads</span>
+                </div>
+                <div class="bg-cardDark border border-borderDark p-5 rounded-2xl">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs text-gray-400 font-medium">Offline Store Visits</span>
+                        <i class="fa-solid fa-person-walking-luggage text-purpleGlow"></i>
+                    </div>
+                    <p id="metric-visits" class="text-3xl font-black text-white mt-2">0</p>
+                    <span class="text-[10px] text-purpleGlow">Logged by team members</span>
+                </div>
+                <div class="bg-cardDark border border-borderDark p-5 rounded-2xl">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs text-gray-400 font-medium">Hot Prospects</span>
+                        <i class="fa-solid fa-fire text-amber-500"></i>
+                    </div>
+                    <p id="metric-hot" class="text-3xl font-black text-amber-400 mt-2">0</p>
+                    <span class="text-[10px] text-gray-500">Ready for onboarding</span>
+                </div>
+                <div class="bg-cardDark border border-borderDark p-5 rounded-2xl">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs text-gray-400 font-medium">Onboarded Clients</span>
+                        <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                    </div>
+                    <p id="metric-closed" class="text-3xl font-black text-emerald-400 mt-2">0</p>
+                    <span class="text-[10px] text-gray-500">Active online sellers</span>
+                </div>
+            </div>
+
+            <!-- Leads & Visits Table Container -->
+            <div class="bg-cardDark border border-borderDark rounded-2xl overflow-hidden">
+                <!-- Filter & Search Controls -->
+                <div class="p-4 border-b border-borderDark flex flex-col sm:flex-row justify-between items-center gap-3">
+                    <div class="flex items-center gap-2 w-full sm:w-auto">
+                        <div class="relative w-full sm:w-64">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-xs text-gray-500"></i>
+                            <input type="text" id="crm-search" oninput="renderCRMTable()" placeholder="Search store name, phone, city..." class="w-full bg-black border border-borderDark text-xs text-white rounded-xl pl-9 pr-3 py-2 focus:outline-none focus:border-purpleGlow">
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 w-full sm:w-auto overflow-x-auto">
+                        <button onclick="setFilterCategory('all')" id="tab-all" class="crm-tab active px-3 py-1.5 rounded-lg text-xs font-semibold bg-purpleAccent text-white">All Leads</button>
+                        <button onclick="setFilterCategory('offline')" id="tab-offline" class="crm-tab px-3 py-1.5 rounded-lg text-xs font-semibold bg-black text-gray-400 border border-borderDark">Offline Visits</button>
+                        <button onclick="setFilterCategory('online')" id="tab-online" class="crm-tab px-3 py-1.5 rounded-lg text-xs font-semibold bg-black text-gray-400 border border-borderDark">Online Apply</button>
+                    </div>
+                </div>
+
+                <!-- Responsive Table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-black/60 text-gray-400 border-b border-borderDark uppercase font-bold text-[10px] tracking-wider">
+                                <th class="p-4">Type</th>
+                                <th class="p-4">Store & Owner</th>
+                                <th class="p-4">Contact & City</th>
+                                <th class="p-4">Discussion / Requirements</th>
+                                <th class="p-4">Status</th>
+                                <th class="p-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="crm-tbody" class="divide-y divide-borderDark text-gray-300">
+                            <!-- Dynamic Content Rendered Here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- OFFLINE VISIT ENTRY MODAL -->
+    <div id="visit-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-cardDark border border-purpleAccent/50 rounded-2xl w-full max-w-xl p-6 space-y-4 glow-purple relative max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-borderDark pb-3">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-clipboard-user text-purpleGlow"></i>
+                    <h3 class="text-lg font-bold text-white">Log Offline Store Visit</h3>
+                </div>
+                <button onclick="closeOfflineVisitModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+
+            <form id="offline-visit-form" onsubmit="handleOfflineVisitSubmit(event)" class="space-y-4">
+                <div class="grid sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[11px] font-medium text-gray-300 mb-1">Dukaan Ka Naam / Store Name *</label>
+                        <input type="text" id="off-store" required placeholder="e.g. New Look Menswear" class="w-full bg-black border border-borderDark rounded-xl px-3 py-2 text-xs text-white focus:border-purpleGlow focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-medium text-gray-300 mb-1">Owner Name *</label>
+                        <input type="text" id="off-owner" required placeholder="e.g. Vikram Singh" class="w-full bg-black border border-borderDark rounded-xl px-3 py-2 text-xs text-white focus:border-purpleGlow focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[11px] font-medium text-gray-300 mb-1">Phone Number *</label>
+                        <input type="tel" id="off-phone" required placeholder="e.g. 9812345678" class="w-full bg-black border border-borderDark rounded-xl px-3 py-2 text-xs text-white focus:border-purpleGlow focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-medium text-gray-300 mb-1">City / Market Area *</label>
+                        <input type="text" id="off-city" required placeholder="e.g. Main Market, Indore" class="w-full bg-black border border-borderDark rounded-xl px-3 py-2 text-xs text-white focus:border-purpleGlow focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[11px] font-medium text-gray-300 mb-1">Visited By (Team Member) *</label>
+                        <input type="text" id="off-member" required placeholder="e.g. Aman / Broski Team" class="w-full bg-black border border-borderDark rounded-xl px-3 py-2 text-xs text-white focus:border-purpleGlow focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-medium text-gray-300 mb-1">Initial Lead Status</label>
+                        <select id="off-status" class="w-full bg-black border border-borderDark rounded-xl px-3 py-2 text-xs text-white focus:border-purpleGlow focus:outline-none">
+                            <option value="Hot Lead">Hot Lead (Very Interested)</option>
+                            <option value="Follow-up">Follow-up Required</option>
+                            <option value="Interested">Interested / Thinking</option>
+                            <option value="Closed / Onboarded">Closed & Onboarded</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-medium text-gray-300 mb-1">Discussion Notes / Client Requirements</label>
+                    <textarea id="off-notes" rows="3" placeholder="Saree shop, wants Meesho onboarding + photoshoot of 20 designs..." class="w-full bg-black border border-borderDark rounded-xl px-3 py-2 text-xs text-white focus:border-purpleGlow focus:outline-none"></textarea>
+                </div>
+
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeOfflineVisitModal()" class="px-4 py-2 rounded-xl text-xs font-semibold bg-black border border-borderDark text-gray-300 hover:text-white">Cancel</button>
+                    <button type="submit" class="purple-gradient-btn text-white text-xs font-semibold px-5 py-2 rounded-xl">Save Field Visit Entry</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-borderDark bg-black py-8 px-4 text-center text-xs text-gray-500">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-2">
+                <span class="font-black text-white">Broski <span class="text-purpleGlow">Growth</span></span>
+                <span>© 2026 Broski Growth Agency. All Rights Reserved.</span>
+            </div>
+            <div class="flex gap-4 text-gray-400">
+                <a href="#services" class="hover:text-purpleGlow">Services</a>
+                <a href="#portfolio" class="hover:text-purpleGlow">Portfolio</a>
+                <button onclick="switchTab('crm')" class="hover:text-purpleGlow">CRM Portal</button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // State Management with LocalStorage Fallback & Mock Defaults
+        let clientLeads = JSON.parse(localStorage.getItem('broski_leads')) || [
+            {
+                id: 'lead_1',
+                type: 'Offline Visit',
+                storeName: 'Royal Threads & Co.',
+                ownerName: 'Manish Verma',
+                phone: '+91 98290 12345',
+                city: 'Bapu Bazaar, Jaipur',
+                services: 'Meesho + Photoshoot',
+                notes: 'Showed sample listing. Wants 30 shirt designs cataloged next Monday.',
+                visitedBy: 'Broski Field Team',
+                status: 'Hot Lead',
+                date: '2026-11-02'
+            },
+            {
+                id: 'lead_2',
+                type: 'Online Apply',
+                storeName: 'Urban Kurti Hub',
+                ownerName: 'Pooja Sharma',
+                phone: '+91 97110 54321',
+                city: 'Karol Bagh, Delhi',
+                services: 'Meta Ads, Instagram Setup',
+                notes: 'Online submission from agency website.',
+                visitedBy: 'N/A (Web Apply)',
+                status: 'Closed / Onboarded',
+                date: '2026-11-04'
+            }
+        ];
+
+        let activeCategoryFilter = 'all';
+
+        // Save State
+        function saveLeads() {
+            localStorage.setItem('broski_leads', JSON.stringify(clientLeads));
+            renderCRMTable();
+            updateMetrics();
+        }
+
+        // Tab Switch (Public Website vs CRM Dashboard)
+        function switchTab(tabName) {
+            const publicView = document.getElementById('public-view');
+            const crmView = document.getElementById('crm-view');
+            
+            if (tabName === 'crm') {
+                publicView.classList.add('hidden');
+                crmView.classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                renderCRMTable();
+                updateMetrics();
+            } else {
+                crmView.classList.add('hidden');
+                publicView.classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // Scroll helper
+        function scrollToSection(id) {
+            switchTab('public');
+            setTimeout(() => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                }
+            }, 50);
+        }
+
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Portfolio Filter
+        function filterPortfolio(category) {
+            const buttons = document.querySelectorAll('.portfolio-btn');
+            buttons.forEach(btn => btn.classList.remove('bg-purpleAccent', 'text-white'));
+            
+            event.target.classList.add('bg-purpleAccent', 'text-white');
+
+            const cards = document.querySelectorAll('.portfolio-card');
+            cards.forEach(card => {
+                if (category === 'all' || card.classList.contains(category)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Handle Public Apply Form Submission
+        function handlePublicApply(event) {
+            event.preventDefault();
+            
+            const owner = document.getElementById('app-owner').value;
+            const store = document.getElementById('app-store').value;
+            const phone = document.getElementById('app-phone').value;
+            const city = document.getElementById('app-city').value;
+            const notes = document.getElementById('app-notes').value;
+
+            // Get selected checkboxes
+            const selectedServices = Array.from(document.querySelectorAll('input[name="services"]:checked'))
+                .map(cb => cb.value)
+                .join(', ') || 'General Growth';
+
+            const newLead = {
+                id: 'lead_' + Date.now(),
+                type: 'Online Apply',
+                storeName: store,
+                ownerName: owner,
+                phone: phone,
+                city: city,
+                services: selectedServices,
+                notes: notes || 'Website application lead.',
+                visitedBy: 'N/A (Web Apply)',
+                status: 'Hot Lead',
+                date: new Date().toISOString().split('T')[0]
+            };
+
+            clientLeads.unshift(newLead);
+            saveLeads();
+
+            showToast('Application Submitted! Team Broski will contact you shortly.', 'success');
+            document.getElementById('public-apply-form').reset();
+        }
+
+        // Offline Visit Modal Handlers
+        function openOfflineVisitModal() {
+            document.getElementById('visit-modal').classList.remove('hidden');
+        }
+
+        function closeOfflineVisitModal() {
+            document.getElementById('visit-modal').classList.add('hidden');
+            document.getElementById('offline-visit-form').reset();
+        }
+
+        function handleOfflineVisitSubmit(event) {
+            event.preventDefault();
+
+            const store = document.getElementById('off-store').value;
+            const owner = document.getElementById('off-owner').value;
+            const phone = document.getElementById('off-phone').value;
+            const city = document.getElementById('off-city').value;
+            const member = document.getElementById('off-member').value;
+            const status = document.getElementById('off-status').value;
+            const notes = document.getElementById('off-notes').value;
+
+            const newVisit = {
+                id: 'visit_' + Date.now(),
+                type: 'Offline Visit',
+                storeName: store,
+                ownerName: owner,
+                phone: phone,
+                city: city,
+                services: 'Field Assessment',
+                notes: notes || 'Logged by team member.',
+                visitedBy: member,
+                status: status,
+                date: new Date().toISOString().split('T')[0]
+            };
+
+            clientLeads.unshift(newVisit);
+            saveLeads();
+
+            closeOfflineVisitModal();
+            showToast('Field visit details saved successfully!', 'success');
+        }
+
+        // Filter Table Category
+        function setFilterCategory(cat) {
+            activeCategoryFilter = cat;
+            document.querySelectorAll('.crm-tab').forEach(t => {
+                t.classList.remove('bg-purpleAccent', 'text-white');
+                t.classList.add('bg-black', 'text-gray-400');
+            });
+            
+            const activeBtn = document.getElementById(`tab-${cat}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-black', 'text-gray-400');
+                activeBtn.classList.add('bg-purpleAccent', 'text-white');
+            }
+
+            renderCRMTable();
+        }
+
+        // Render CRM Lead Table
+        function renderCRMTable() {
+            const tbody = document.getElementById('crm-tbody');
+            const searchVal = document.getElementById('crm-search').value.toLowerCase();
+            
+            tbody.innerHTML = '';
+
+            const filtered = clientLeads.filter(lead => {
+                const matchesSearch = 
+                    lead.storeName.toLowerCase().includes(searchVal) ||
+                    lead.ownerName.toLowerCase().includes(searchVal) ||
+                    lead.phone.toLowerCase().includes(searchVal) ||
+                    lead.city.toLowerCase().includes(searchVal);
+
+                if (activeCategoryFilter === 'offline') return matchesSearch && lead.type === 'Offline Visit';
+                if (activeCategoryFilter === 'online') return matchesSearch && lead.type === 'Online Apply';
+                return matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="p-8 text-center text-gray-500 text-xs">
+                            No records found. Try adding an offline visit or changing search query.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            filtered.forEach(lead => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-black/40 transition-colors";
+
+                let statusBadge = '';
+                if (lead.status === 'Hot Lead') {
+                    statusBadge = '<span class="bg-amber-500/20 text-amber-400 px-2.5 py-1 rounded-md font-bold text-[10px]"><i class="fa-solid fa-fire text-[9px] mr-1"></i>Hot Lead</span>';
+                } else if (lead.status === 'Closed / Onboarded') {
+                    statusBadge = '<span class="bg-emerald-500/20 text-emerald-400 px-2.5 py-1 rounded-md font-bold text-[10px]"><i class="fa-solid fa-check text-[9px] mr-1"></i>Closed & Onboarded</span>';
+                } else {
+                    statusBadge = '<span class="bg-purpleAccent/20 text-purpleGlow px-2.5 py-1 rounded-md font-bold text-[10px]"><i class="fa-solid fa-clock text-[9px] mr-1"></i>' + lead.status + '</span>';
+                }
+
+                tr.innerHTML = `
+                    <td class="p-4">
+                        <span class="px-2 py-1 rounded border border-borderDark text-[10px] font-semibold ${lead.type === 'Offline Visit' ? 'bg-purpleAccent/10 text-purpleGlow' : 'bg-blue-500/10 text-blue-400'}">
+                            ${lead.type}
+                        </span>
+                        <p class="text-[10px] text-gray-500 mt-1">${lead.date}</p>
+                    </td>
+                    <td class="p-4">
+                        <p class="font-bold text-white text-sm">${lead.storeName}</p>
+                        <p class="text-gray-400 text-xs">${lead.ownerName}</p>
+                    </td>
+                    <td class="p-4">
+                        <p class="text-purpleGlow font-medium">${lead.phone}</p>
+                        <p class="text-gray-400">${lead.city}</p>
+                    </td>
+                    <td class="p-4 max-w-xs">
+                        <p class="text-gray-300 font-semibold text-[11px]">${lead.services}</p>
+                        <p class="text-gray-500 truncate text-[10px]" title="${lead.notes}">${lead.notes}</p>
+                        <p class="text-[9px] text-purpleGlow/80 mt-0.5">Rep: ${lead.visitedBy}</p>
+                    </td>
+                    <td class="p-4">
+                        <select onchange="updateLeadStatus('${lead.id}', this.value)" class="bg-black border border-borderDark rounded-lg px-2 py-1 text-[11px] text-white focus:border-purpleGlow focus:outline-none">
+                            <option value="Hot Lead" ${lead.status === 'Hot Lead' ? 'selected' : ''}>🔥 Hot Lead</option>
+                            <option value="Follow-up" ${lead.status === 'Follow-up' ? 'selected' : ''}>⏳ Follow-up</option>
+                            <option value="Interested" ${lead.status === 'Interested' ? 'selected' : ''}>💡 Interested</option>
+                            <option value="Closed / Onboarded" ${lead.status === 'Closed / Onboarded' ? 'selected' : ''}>✅ Closed / Onboarded</option>
+                        </select>
+                    </td>
+                    <td class="p-4 text-right space-x-2">
+                        <button onclick="deleteLead('${lead.id}')" class="text-gray-500 hover:text-red-400 p-1" title="Delete Entry">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </td>
+                `;
+
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Update Lead Status
+        function updateLeadStatus(id, newStatus) {
+            const lead = clientLeads.find(l => l.id === id);
+            if (lead) {
+                lead.status = newStatus;
+                saveLeads();
+                showToast(`Status updated to "${newStatus}"`, 'info');
+            }
+        }
+
+        // Delete Lead
+        function deleteLead(id) {
+            clientLeads = clientLeads.filter(l => l.id !== id);
+            saveLeads();
+            showToast('Lead entry removed.', 'info');
+        }
+
+        // Update Dashboard Top Metrics
+        function updateMetrics() {
+            document.getElementById('metric-total').innerText = clientLeads.length;
+            document.getElementById('metric-visits').innerText = clientLeads.filter(l => l.type === 'Offline Visit').length;
+            document.getElementById('metric-hot').innerText = clientLeads.filter(l => l.status === 'Hot Lead').length;
+            document.getElementById('metric-closed').innerText = clientLeads.filter(l => l.status === 'Closed / Onboarded').length;
+        }
+
+        // Toast Notification System
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            const borderCol = type === 'success' ? 'border-purpleGlow' : 'border-borderDark';
+            
+            toast.className = `bg-cardDark border ${borderCol} text-white text-xs px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 transition-all duration-300 transform translate-y-2`;
+            toast.innerHTML = `
+                <i class="fa-solid ${type === 'success' ? 'fa-circle-check text-purpleGlow' : 'fa-circle-info text-blue-400'} text-base"></i>
+                <span>${message}</span>
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', '-translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            updateMetrics();
+            renderCRMTable();
+        };
+    </script>
+</body>
+</html>
+```
